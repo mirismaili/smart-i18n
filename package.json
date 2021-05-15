@@ -1,0 +1,32 @@
+{
+	"name": "i18x",
+	"version": "0.0.3",
+	"description": "Smart easy-to-use i18n library",
+	"keywords": [
+		"i18n",
+		"internationalization",
+		"translation",
+		"multilinual",
+		"multi-linual",
+		"json"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mirismaili/smart-i18n"
+	},
+	"license": "MIT",
+	"author": "S. Mahdi Mir-Ismaili <s.m.mirismaili@gmail.com>",
+	"type": "module",
+	"main": "src/main.js",
+	"files": [
+		"src"
+	],
+	"scripts": {
+		"test": "node test/I18n.test.js"
+	},
+	"dependencies": {},
+	"devDependencies": {},
+	"engines": {
+		"node": ">=14"
+	}
+}
