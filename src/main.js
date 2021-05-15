@@ -82,41 +82,51 @@ export default class I18n {
 			}
 			
 			try {
-				this[lang].$intlFormatter = new Intl.NumberFormat(messages[lang].$locale ?? lang)
+				let locale = messages[lang].$locale ?? lang
+				this[lang].$numberFormatter = new Intl.NumberFormat(locale, messages[lang]['$numberFormatOptions'])
+				this[lang].$dateTimeFormatter = new Intl.DateTimeFormat(locale, messages[lang]['$dateTimeFormatOptions'])
 			} catch (err) {
 				console.error(err)
 			}
 		}
 	}
 	
-	partialTranslator(stringOrNumber, lang) {
-		// console.debug({stringOrNumber});
-		if (typeof stringOrNumber === 'number' || stringOrNumber instanceof Number) {
-			const number = stringOrNumber
+	partialTranslator(input, lang) {
+		// console.debug({input});
+		if (typeof input === 'number' || input instanceof Number) {
+			const number = input
 			
-			if (this[lang].$intlFormatter)
-				return this[lang].$intlFormatter.format(number)
+			if (this[lang].$numberFormatter)
+				return this[lang].$numberFormatter.format(number)
 			
-			stringOrNumber = String(stringOrNumber)
+			input = String(input)
+		} else if (input instanceof Date) {
+			const number = input
+			
+			if (this[lang].$dateTimeFormatter)
+				return this[lang].$dateTimeFormatter.format(number)
+			
+			input = String(input)
 		}
 		
-		if (!(typeof stringOrNumber === 'string' || stringOrNumber instanceof String)) {
+		if (!(typeof input === 'string' || input instanceof String)) {
 			console.trace(
-					'Argument can only be string or number. Boolean, null, undefined, etc. is not acceptable!\n' +
-					`stringOrNumber: ${stringOrNumber}\n` +
-					`type: ${typeof stringOrNumber}\n` +
-					`object-type: ${Object.prototype.toString.call(stringOrNumber)}`,
+					'Argument can only be string or number or Date. ' +
+					'Boolean, null, undefined, etc. are not acceptable!\n' +
+					`stringOrNumber: ${input}\n` +
+					`type: ${typeof input}\n` +
+					`object-type: ${Object.prototype.toString.call(input)}`,
 			)
-			return String(stringOrNumber)
+			return String(input)
 		}
 		
-		const string = stringOrNumber
+		const string = input
 		const {leadingSpaces, trimmedMessage, trailingSpaces} = purifyMessage(string)
 		// console.debug({trimmedMessage});
 		
 		const tMessage = trimmedMessage && this.messages[lang][trimmedMessage]
 		
-		if (tMessage)
+		if (tMessage !== undefined)
 			return leadingSpaces + tMessage + trailingSpaces
 		
 		// https://regex101.com/r/xnyZDa/2
@@ -128,7 +138,7 @@ export default class I18n {
 					[...trimmedMessage].map(ch => this.messages[lang].$numerical[ch]).join('')
 					+ trailingSpaces
 		
-		return this.smartTranslation(string, lang)
+		return leadingSpaces + this.smartTranslation(trimmedMessage, lang) + trailingSpaces
 	}
 	
 	smartTranslation(string, lang) {
@@ -138,10 +148,11 @@ export default class I18n {
 		
 		function smartTranslationR(string) {
 			for (const m of sortedMessages) {
+				
 				const match = new RegExp(
-						'\\b' +
+						(/\w/.test(m[0]) ? '\\b' : '') +    // m !== ''
 						m.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') +  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
-						'\\b',
+						(/\w/.test(m.slice(-1)) ? '\\b' : ''),      // m !== ''
 						'i',
 				).exec(string)
 				
@@ -179,13 +190,4 @@ function purifyMessage(message) {
 	const leadingSpaces = message.slice(0, a)
 	const trailingSpaces = message.slice(b)
 	return {leadingSpaces, trimmedMessage, trailingSpaces}
-}
-
-/**
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
- * @param string
- * @returns {*}
- */
-function escapeRegExp(string) {
-	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }

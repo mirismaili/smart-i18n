@@ -1,5 +1,5 @@
 import {strict as assert} from 'assert'
-import messages from '../sample-data/messages.js'
+import messages from '../example/messages.js'
 import I18n from '../src/main.js'
 
 /**
@@ -33,8 +33,8 @@ assert.equal(t`x ${' y'}z`, 'x  yz')
 assert.equal(t`x${' y '}z`, 'x y z')
 assert.equal(t`x${'y '} z`, 'xy  z')
 
-assert.equal(t('‎'), '‎')
-assert.equal(t`‎`, '‎')
+assert.equal(t('\u200E'), '\u200E')
+assert.equal(t`\u200F`, '\u200F')
 assert.equal(t('→'), '→')
 assert.equal(t`→`, '→')
 
@@ -60,8 +60,8 @@ assert.equal(t`galaxy ${' Hello '}water`, 'کهکشان  سلام آب')
 assert.equal(t`galaxy${' Hello '} water`, 'کهکشان سلام  آب')
 assert.equal(t`galaxy ${' Hello '} water`, 'کهکشان  سلام  آب')
 
-assert.equal(t('‎'), '‏')
-assert.equal(t`‎`, '‏')
+assert.equal(t('\u200E'), '\u200F')
+assert.equal(t`\u200F`, '\u200E')
 assert.equal(t('→'), '←')
 assert.equal(t`→`, '←')
 
@@ -75,6 +75,8 @@ assert.equal(t`${0}`, '۰')
 assert.equal(t`2${3}`, '۲۳')
 assert.equal(t`4${5}6`, '۴۵۶')
 assert.equal(t`7${'8'}9`, '۷۸۹')
+assert.equal(t`7${','}9`, '۷،۹')
+assert.equal(t`7${';'}9`, '۷‌؛۹')
 
 assert.equal(t`:Hello`, ':سلام')
 assert.equal(t`world.`, 'دنیا.')
@@ -92,4 +94,4 @@ assert.equal(t`You aren't Venus!`, 'You aren\'t ناهید!')
 assert.equal(t`You are Venus or Mars!`, 'You are ناهید یا بهرام!')
 
 assert.equal(t`VenusMars!`, 'VenusMars!')
-assert.equal(t`Venus/Mars!`, 'ناهید/بهرام!')
+assert.equal(t`Venus,Mars!`, 'ناهید،بهرام!')

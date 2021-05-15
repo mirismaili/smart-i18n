@@ -7,14 +7,19 @@ export default {
 	en: {
 		// Meta-data-s won't be translated. They should start with `$`.
 		$dir: 'LTR',
-		$locale: 'en-US',   // default to preset-name (here: 'en') 
+		$locale: 'en-US',   // default to preset-name (here: 'en'). 
+							// can be used with unicode extension (e.g. 'en-US-u-ca-persian'). See: 
+							// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
+		
+		// $numberFormatOptions:  { style: 'currency', currency: 'EUR' },  // optional
 		
 		// Hello: "Hello",  // doesn't need when key == value
 	},
 	
 	fa: {
 		$dir: 'RTL',
-		$locale: 'fa-IR',   // default to preset-name (here: 'fa')
+		$locale: 'fa-IR',   // default to preset-name (here: 'fa'). can be used with unicode extension (-u-...)
+		// $dateTimeFormatOptions: { dateStyle: 'full', timeStyle: 'long' },  // optional
 		
 		// punctuations:
 		',': '،',  // comma
@@ -38,6 +43,7 @@ export default {
 		// phrases and sentences:
 		'In the name of God': 'به نام خدا',
 		'the stars': 'ستارگان',
+		'is very nice': 'خیلی خوبه',
 		
 		$numerical: {
 			0: '۰',    // zero digit (next digits will automatically derived)

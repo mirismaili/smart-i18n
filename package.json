@@ -1,6 +1,6 @@
 {
 	"name": "i18x",
-	"version": "0.1.0",
+	"version": "0.1.4",
 	"description": "Smart easy-to-use i18n library",
 	"keywords": [
 		"i18n",
